@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model Organization {
+  id String @id @default(uuid())
+
+  name String
+  slug String @unique
+
+  status OrganizationStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  projects Project[]
+}
+
+enum RoleType {
+  EMPLOYEE
+  MANAGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+model Role {
+  id String @id @default(uuid())
+
+  name RoleType @unique
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+}
+
+
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+model User {
+  id String @id @default(uuid())
+
+  clerkUserId    String @unique
+
+  organizationId String?
+  roleId String?
+
+  name String
+  email String
+
+  firstName String?
+  lastName String?
+
+  imageUrl String?
+
+  phoneNumber String?
+
+  status UserStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization? @relation(fields:[organizationId], references:[id])
+  role Role? @relation(fields:[roleId], references:[id])
+
+  @@unique([organizationId, email])
+}
+
+
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model Project {
+  id String @id @default(uuid())
+
+  organizationId String
+
+  code String
+  name String
+
+  description String?
+
+  status ProjectStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+}
