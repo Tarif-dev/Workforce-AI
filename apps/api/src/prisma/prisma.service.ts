@@ -7,6 +7,24 @@ export class PrismaService
   implements OnModuleInit {
 
   async onModuleInit() {
+  try {
+    console.log(
+      'DATABASE_URL:',
+      process.env.DATABASE_URL
+        ? 'FOUND'
+        : 'MISSING',
+    );
+
     await this.$connect();
+
+    console.log(
+      'Prisma connected successfully',
+    );
+  } catch (error) {
+    console.error(
+      'Prisma connection failed',
+      error,
+    );
   }
+}
 }
