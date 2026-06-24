@@ -6,10 +6,10 @@ export interface AuditInteraction {
   message: string;
   intent?: string;
   contextUsed?: boolean;
-  extractedData?: any;
-  validationData?: any;
+  extractedData?: unknown;
+  validationData?: unknown;
   toolName?: string;
-  toolResult?: any;
+  toolResult?: unknown;
   success: boolean;
   error?: string;
 }
@@ -36,8 +36,12 @@ export class AuditService {
           error: data.error || undefined,
         },
       });
-    } catch (e) {
-      this.logger.error(`Failed to write audit log: ${e.message}`, e.stack);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        this.logger.error(`Failed to write audit log: ${e.message}`, e.stack);
+      } else {
+        this.logger.error(`Failed to write audit log: ${String(e)}`);
+      }
     }
   }
 }

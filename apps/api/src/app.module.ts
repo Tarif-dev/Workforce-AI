@@ -16,11 +16,16 @@ import { RagModule } from './rag/rag.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, 
-    AuthModule, 
-    UsersModule, 
-    WebhooksModule, AiModule, AgentsModule, ToolsModule, RagModule],
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    WebhooksModule,
+    AiModule,
+    AgentsModule,
+    ToolsModule,
+    RagModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

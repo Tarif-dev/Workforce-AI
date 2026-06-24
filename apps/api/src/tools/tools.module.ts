@@ -2,15 +2,11 @@ import { Module } from '@nestjs/common';
 import { SubmitTimesheetTool } from './timesheet/submit-timesheet.tool';
 import { CreateLeaveRequestTool } from './leave/create-leave-request.tool';
 
-@Module({
-  providers: [
-    SubmitTimesheetTool,
-    CreateLeaveRequestTool,
-  ],
+import { LogAttendanceTool } from './attendance/log-attendance.tool';
 
-  exports: [
-    SubmitTimesheetTool,
-    CreateLeaveRequestTool,
-  ],
+@Module({
+  providers: [SubmitTimesheetTool, CreateLeaveRequestTool, LogAttendanceTool],
+
+  exports: [SubmitTimesheetTool, CreateLeaveRequestTool, LogAttendanceTool],
 })
 export class ToolsModule {}

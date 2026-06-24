@@ -13,6 +13,8 @@ model Organization {
   name      String
   slug      String             @unique
 
+  timezone  String             @default("Asia/Kolkata")
+
   status    OrganizationStatus @default(ACTIVE)
 
   createdAt DateTime           @default(now())
@@ -65,6 +67,8 @@ model User {
   timesheets     Timesheet[]
 
   leaveRequests  LeaveRequest[]
+  
+  attendanceRecords AttendanceRecord[]
 
   conversationContext ConversationContext?
 
@@ -169,6 +173,36 @@ model LeaveRequest {
   @@index([endDate])
 }
 
+model AttendanceRecord {
+  id         String   @id @default(uuid())
+  userId     String
+  date       DateTime // Normalized to midnight UTC
+
+  status     AttendanceStatus @default(PRESENT)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  punches    AttendancePunch[]
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
+
+model AttendancePunch {
+  id         String   @id @default(uuid())
+  recordId   String
+  type       PunchType // IN, OUT
+
+  timestamp  DateTime @default(now()) // Stored as UTC
+
+  record     AttendanceRecord @relation(fields: [recordId], references: [id])
+
+  @@index([recordId])
+}
+
 enum OrganizationStatus {
   ACTIVE
   INACTIVE
@@ -230,6 +264,17 @@ enum LeaveStatus {
   APPROVED
   REJECTED
   CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  WFH
+  ABSENT
+}
+
+enum PunchType {
+  IN
+  OUT
 }
 
 model AuditLog {

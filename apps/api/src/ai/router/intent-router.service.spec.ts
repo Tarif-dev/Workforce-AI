@@ -78,7 +78,10 @@ describe('IntentRouterService - Audit Logging', () => {
 
   it('should log an unsupported intent', async () => {
     contextService.getContext.mockResolvedValue(null);
-    intentService.classify.mockResolvedValue({ intent: IntentType.UNKNOWN, confidence: 0.9 } as any);
+    intentService.classify.mockResolvedValue({
+      intent: IntentType.UNKNOWN,
+      confidence: 0.9,
+    });
 
     const result = await routerService.process('user-1', 'hello');
 

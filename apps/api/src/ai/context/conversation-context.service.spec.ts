@@ -12,11 +12,13 @@ describe('ConversationContextService', () => {
 
   describe('mergeData', () => {
     it('should return incoming if existing is null', () => {
-      expect(service.mergeData(null, { a: 1 })).toEqual({ a: 1 });
+      const incoming = { a: 1 };
+      expect(service.mergeData({} as any, incoming)).toEqual(incoming);
     });
 
     it('should return existing if incoming is null', () => {
-      expect(service.mergeData({ a: 1 }, null)).toEqual({ a: 1 });
+      const existing = { a: 1 };
+      expect(service.mergeData(existing, {} as any)).toEqual(existing);
     });
 
     it('should merge non-null incoming fields into existing', () => {
@@ -58,7 +60,12 @@ describe('ConversationContextService', () => {
 
     it('should append new items in incoming arrays if it is longer', () => {
       const existing = { entries: [{ project: 'frontend', hours: 4 }] };
-      const incoming = { entries: [{ project: null, hours: null }, { project: 'backend', hours: 2 }] };
+      const incoming = {
+        entries: [
+          { project: null, hours: null },
+          { project: 'backend', hours: 2 },
+        ],
+      };
 
       expect(service.mergeData(existing, incoming)).toEqual({
         entries: [

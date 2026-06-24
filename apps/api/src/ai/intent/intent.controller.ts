@@ -1,19 +1,10 @@
-import {
-  Body,
-  Controller,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 
-import { IntentService }
-  from './intent.service';
+import { IntentService } from './intent.service';
 
 @Controller('intent')
 export class IntentController {
-
-  constructor(
-    private readonly intentService:
-      IntentService,
-  ) {}
+  constructor(private readonly intentService: IntentService) {}
 
   @Post()
   async classify(
@@ -22,9 +13,6 @@ export class IntentController {
       message: string;
     },
   ) {
-
-    return this.intentService.classify(
-      body.message,
-    );
+    return this.intentService.classify(body.message);
   }
 }

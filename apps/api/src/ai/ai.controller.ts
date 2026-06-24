@@ -1,28 +1,14 @@
-import {
-  Body,
-  Controller,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 
 import { AiService } from './ai.service';
 
 @Controller('ai')
 export class AiController {
-  constructor(
-    private readonly aiService: AiService,
-  ) {}
+  constructor(private readonly aiService: AiService) {}
 
-  @Post('chat')
-  async chat(
-    @Body()
-    body: {
-      prompt: string;
-    },
-  ) {
-    const response =
-      await this.aiService.ask(
-        body.prompt,
-      );
+  @Post('process')
+  async processMessage(@Body() body: { userId: string; message: string }) {
+    const response = await this.aiService.ask(body.message);
 
     return {
       response,

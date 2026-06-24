@@ -11,9 +11,7 @@ interface CreateClerkUserDto {
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createFromClerk(data: CreateClerkUserDto) {
     const existingUser = await this.prisma.user.findUnique({

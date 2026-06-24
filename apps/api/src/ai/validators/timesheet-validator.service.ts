@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
 import { ValidationResult } from './validation-result.interface';
+import { TimesheetExtractionDto } from '../extractor/timesheet.dto';
 
 @Injectable()
 export class TimesheetValidatorService {
-
   async validate(
-    data: any,
-  ): Promise<ValidationResult> {
-
+    data: Partial<TimesheetExtractionDto>,
+  ): Promise<ValidationResult<TimesheetExtractionDto>> {
     // Rule 1: Entries must exist and be non-empty
     if (
       !data.entries ||
@@ -20,41 +19,31 @@ export class TimesheetValidatorService {
 
         needsClarification: true,
 
-        question:
-          'Please provide your work entries.',
+        question: 'Please provide your work entries.',
       };
     }
 
     // Validate each entry individually
     for (const entry of data.entries) {
-
       // Rule 2: Project must be present
-      if (
-        !entry.project ||
-        entry.project.trim() === ''
-      ) {
+      if (!entry.project || entry.project.trim() === '') {
         return {
           valid: false,
 
           needsClarification: true,
 
-          question:
-            'Which project did you work on?',
+          question: 'Which project did you work on?',
         };
       }
 
       // Rule 3: Hours must be present
-      if (
-        entry.hours === null ||
-        entry.hours === undefined
-      ) {
+      if (entry.hours === null || entry.hours === undefined) {
         return {
           valid: false,
 
           needsClarification: true,
 
-          question:
-            `How many hours did you spend on ${entry.project}?`,
+          question: `How many hours did you spend on ${entry.project}?`,
         };
       }
 
@@ -65,8 +54,7 @@ export class TimesheetValidatorService {
 
           needsClarification: true,
 
-          question:
-            'Hours must be greater than zero.',
+          question: 'Hours must be greater than zero.',
         };
       }
 
@@ -77,26 +65,21 @@ export class TimesheetValidatorService {
 
           needsClarification: true,
 
-          question:
-            'A single entry cannot exceed 24 hours.',
+          question: 'A single entry cannot exceed 24 hours.',
         };
       }
     }
 
     // Rule 7: Round hours to max 2 decimal places
-    const roundedEntries = data.entries.map(
-      (entry: any) => ({
-        ...entry,
+    const roundedEntries = data.entries.map((entry: any) => ({
+      ...entry,
 
-        hours:
-          Math.round(entry.hours * 100) / 100,
-      }),
-    );
+      hours: Math.round(entry.hours * 100) / 100,
+    }));
 
     // Rule 6: Total daily hours <= 24
     const totalHours = roundedEntries.reduce(
-      (sum: number, entry: any) =>
-        sum + entry.hours,
+      (sum: number, entry: any) => sum + entry.hours,
       0,
     );
 
@@ -106,8 +89,7 @@ export class TimesheetValidatorService {
 
         needsClarification: true,
 
-        question:
-          `Total daily hours cannot exceed 24. Current total: ${totalHours}.`,
+        question: `Total daily hours cannot exceed 24. Current total: ${totalHours}.`,
       };
     }
 

@@ -3,9 +3,7 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class WebhooksService {
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async handleUserCreated(data: any) {
     return this.usersService.createFromClerk({

@@ -1,6 +1,3 @@
 export interface AIProvider {
-  generate(
-    prompt: string,
-    systemPrompt?: string,
-  ): Promise<string>;
+  generate(prompt: string, systemPrompt?: string): Promise<string>;
 }

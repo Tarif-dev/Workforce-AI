@@ -25,14 +25,10 @@ export class WebhooksController {
     @Headers('svix-timestamp') svixTimestamp: string,
     @Headers('svix-signature') svixSignature: string,
   ) {
-    const secret = this.configService.get<string>(
-      'CLERK_WEBHOOK_SECRET',
-    );
+    const secret = this.configService.get<string>('CLERK_WEBHOOK_SECRET');
 
     if (!secret) {
-      throw new Error(
-        'CLERK_WEBHOOK_SECRET is missing',
-      );
+      throw new Error('CLERK_WEBHOOK_SECRET is missing');
     }
 
     const wh = new Webhook(secret);
@@ -40,39 +36,28 @@ export class WebhooksController {
     let evt: any;
 
     try {
-      evt = wh.verify(
-        req.rawBody.toString(),
-        {
-          'svix-id': svixId,
-          'svix-timestamp': svixTimestamp,
-          'svix-signature': svixSignature,
-        },
-      );
+      evt = wh.verify(req.rawBody.toString(), {
+        'svix-id': svixId,
+        'svix-timestamp': svixTimestamp,
+        'svix-signature': svixSignature,
+      });
     } catch (err) {
-      throw new BadRequestException(
-        'Invalid webhook signature',
-      );
+      throw new BadRequestException('Invalid webhook signature');
     }
 
     const eventType = evt.type;
 
     switch (eventType) {
       case 'user.created':
-        await this.webhooksService.handleUserCreated(
-          evt.data,
-        );
+        await this.webhooksService.handleUserCreated(evt.data);
         break;
 
       case 'user.updated':
-        await this.webhooksService.handleUserUpdated(
-          evt.data,
-        );
+        await this.webhooksService.handleUserUpdated(evt.data);
         break;
 
       case 'user.deleted':
-        await this.webhooksService.handleUserDeleted(
-          evt.data,
-        );
+        await this.webhooksService.handleUserDeleted(evt.data);
         break;
     }
 

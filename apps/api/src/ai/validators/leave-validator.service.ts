@@ -1,30 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
 import { ValidationResult } from './validation-result.interface';
+import { LeaveExtractionDto } from '../extractor/leave.dto';
 
 @Injectable()
 export class LeaveValidatorService {
-
   async validate(
-    data: any,
-  ): Promise<ValidationResult> {
+    data: Partial<LeaveExtractionDto>,
+  ): Promise<ValidationResult<LeaveExtractionDto>> {
+    const leaveType = data.leaveType?.toUpperCase();
 
-    const leaveType =
-      data.leaveType?.toUpperCase();
+    const validLeaveTypes = ['SICK', 'CASUAL', 'EARNED', 'UNPAID'];
 
-    const validLeaveTypes = [
-      'SICK',
-      'CASUAL',
-      'EARNED',
-      'UNPAID',
-    ];
-
-    if (
-      !leaveType ||
-      !validLeaveTypes.includes(
-        leaveType,
-      )
-    ) {
+    if (!leaveType || !validLeaveTypes.includes(leaveType)) {
       return {
         valid: false,
 
@@ -41,50 +29,31 @@ export class LeaveValidatorService {
 
         needsClarification: true,
 
-        question:
-          'What date would you like to take leave on?',
+        question: 'What date would you like to take leave on?',
       };
     }
 
-    const startDate =
-      new Date(
-        data.startDate,
-      );
+    const startDate = new Date(data.startDate);
 
-    const endDate =
-      data.endDate
-        ? new Date(
-            data.endDate,
-          )
-        : startDate;
+    const endDate = data.endDate ? new Date(data.endDate) : startDate;
 
-    if (
-      isNaN(
-        startDate.getTime(),
-      )
-    ) {
+    if (isNaN(startDate.getTime())) {
       return {
         valid: false,
 
         needsClarification: true,
 
-        question:
-          'Please provide a valid start date.',
+        question: 'Please provide a valid start date.',
       };
     }
 
-    if (
-      isNaN(
-        endDate.getTime(),
-      )
-    ) {
+    if (isNaN(endDate.getTime())) {
       return {
         valid: false,
 
         needsClarification: true,
 
-        question:
-          'Please provide a valid end date.',
+        question: 'Please provide a valid end date.',
       };
     }
 
@@ -94,8 +63,7 @@ export class LeaveValidatorService {
 
         needsClarification: true,
 
-        question:
-          'End date cannot be before start date.',
+        question: 'End date cannot be before start date.',
       };
     }
 
@@ -109,9 +77,7 @@ export class LeaveValidatorService {
 
         leaveType,
 
-        endDate:
-          data.endDate ??
-          data.startDate,
+        endDate: data.endDate ?? data.startDate,
       },
     };
   }

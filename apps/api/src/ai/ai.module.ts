@@ -16,13 +16,12 @@ import { LeaveValidatorService } from './validators/leave-validator.service';
 import { TimesheetValidatorService } from './validators/timesheet-validator.service';
 import { ProjectValidationService } from './validators/project-validation.service';
 import { ConversationContextService } from './context/conversation-context.service';
+import { AttendanceExtractorService } from './extractor/attendance-extractor.service';
+import { AttendanceValidatorService } from './validators/attendance-validator.service';
 import { AuditModule } from '../audit/audit.module';
 
 @Module({
-  imports: [
-    ToolsModule,
-    AuditModule,
-  ],
+  imports: [ToolsModule, AuditModule],
 
   providers: [
     AiService,
@@ -35,15 +34,18 @@ import { AuditModule } from '../audit/audit.module';
     TimesheetValidatorService,
     ProjectValidationService,
     ConversationContextService,
+    AttendanceExtractorService,
+    AttendanceValidatorService,
     // AiTesterService
   ],
 
-  exports: [
-    AiService,
-    OllamaProvider,
-  ],
+  exports: [AiService, OllamaProvider],
 
-  controllers: [AiController,IntentController,ExtractorsController,RouterController,
-    ],
+  controllers: [
+    AiController,
+    IntentController,
+    ExtractorsController,
+    RouterController,
+  ],
 })
 export class AiModule {}
