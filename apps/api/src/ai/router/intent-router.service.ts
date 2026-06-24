@@ -1,158 +1,195 @@
-
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { IntentService } from '../intent/intent.service';
 import { IntentType } from '../intent/intent.types';
 import { TimesheetExtractorService } from '../extractor/timesheet-extractor.service';
 import { LeaveExtractorService } from '../extractor/leave-extractor.service';
-import { SubmitTimesheetTool } from 'src/tools/timesheet/submit-timesheet.tool';
-import { CreateLeaveRequestTool } from 'src/tools/leave/create-leave-request.tool';
+import { SubmitTimesheetTool } from '../../tools/timesheet/submit-timesheet.tool';
+import { CreateLeaveRequestTool } from '../../tools/leave/create-leave-request.tool';
 import { LeaveValidatorService } from '../validators/leave-validator.service';
 import { TimesheetValidatorService } from '../validators/timesheet-validator.service';
 import { ProjectValidationService } from '../validators/project-validation.service';
+import { ConversationContextService } from '../context/conversation-context.service';
+import { AuditService } from '../../audit/audit.service';
 
 @Injectable()
 export class IntentRouterService {
+  private readonly logger = new Logger(IntentRouterService.name);
 
   constructor(
-    private readonly intentService:
-      IntentService,
+    private readonly intentService: IntentService,
+    private readonly timesheetExtractor: TimesheetExtractorService,
+    private readonly leaveExtractor: LeaveExtractorService,
+    private readonly submitTimesheet: SubmitTimesheetTool,
+    private readonly createLeaveRequest: CreateLeaveRequestTool,
+    private readonly leaveValidator: LeaveValidatorService,
+    private readonly timesheetValidator: TimesheetValidatorService,
+    private readonly projectValidator: ProjectValidationService,
+    private readonly contextService: ConversationContextService,
+    private readonly auditService: AuditService,
+  ) {}
 
-    private readonly timesheetExtractor:
-      TimesheetExtractorService,
+  async process(userId: string, message: string) {
+    let response: any = null;
+    const auditData: any = {
+      userId,
+      message,
+      contextUsed: false,
+      success: false,
+    };
 
-    private readonly leaveExtractor:
-      LeaveExtractorService,
+    try {
+      const context = await this.contextService.getContext(userId);
+      let currentIntent: string;
 
-    private readonly submitTimesheet:
-      SubmitTimesheetTool,
-
-    private readonly createLeaveRequest:
-      CreateLeaveRequestTool,
-
-    private readonly leaveValidator:
-      LeaveValidatorService,
-
-    private readonly timesheetValidator:
-      TimesheetValidatorService,
-
-    private readonly projectValidator:
-      ProjectValidationService,
-  ) { }
-
-  async process(
-    userId: string,
-    message: string,
-  ) {
-
-    const intentResult =
-      await this.intentService.classify(
-        message,
-      );
-
-    switch (
-    intentResult.intent
-    ) {
-
-      case IntentType.TIMESHEET_ENTRY: {
-
-        const extracted =
-          await this.timesheetExtractor.extract(
-            message,
-          );
-
-        const validation =
-          await this.timesheetValidator.validate(
-            extracted,
-          );
+      const intentResult = await this.intentService.classify(message);
+      
+      if (context) {
+        auditData.contextUsed = true;
+        const switchableIntents = [
+          IntentType.TIMESHEET_ENTRY,
+          IntentType.LEAVE_REQUEST,
+        ];
 
         if (
-          validation.needsClarification
+          switchableIntents.includes(intentResult.intent as IntentType) &&
+          intentResult.intent !== context.intent &&
+          intentResult.confidence > 0.8
         ) {
-          return {
-            success: false,
-
-            requiresInput: true,
-
-            question:
-              validation.question,
-          };
+          // User switched intent explicitly to a different actionable flow
+          await this.contextService.clearContext(userId);
+          currentIntent = intentResult.intent;
+          auditData.contextUsed = false; // They switched out of context
+        } else {
+          // User is answering a question or continuing flow
+          currentIntent = context.intent;
         }
+      } else {
+        currentIntent = intentResult.intent;
+      }
 
-        const projectValidation =
-          await this.projectValidator.validate(
+      auditData.intent = currentIntent;
+
+      switch (currentIntent) {
+        case IntentType.TIMESHEET_ENTRY: {
+          const extracted = await this.timesheetExtractor.extract(message);
+          
+          const dataToValidate = context && context.intent === IntentType.TIMESHEET_ENTRY
+            ? this.contextService.mergeData(context.extractedData, extracted)
+            : extracted;
+
+          auditData.extractedData = dataToValidate;
+
+          const validation = await this.timesheetValidator.validate(dataToValidate);
+
+          if (validation.needsClarification) {
+            await this.contextService.saveContext(
+              userId,
+              IntentType.TIMESHEET_ENTRY,
+              dataToValidate,
+              validation.question,
+            );
+            auditData.validationData = { question: validation.question };
+            response = {
+              success: false,
+              requiresInput: true,
+              question: validation.question,
+            };
+            break;
+          }
+
+          const projectValidation = await this.projectValidator.validate(
             userId,
             validation.data.entries,
           );
 
-        if (
-          projectValidation.needsClarification
-        ) {
-          return {
-            success: false,
-
-            requiresInput: true,
-
-            question:
+          if (projectValidation.needsClarification) {
+            await this.contextService.saveContext(
+              userId,
+              IntentType.TIMESHEET_ENTRY,
+              dataToValidate,
               projectValidation.question,
-          };
+            );
+            auditData.validationData = { question: projectValidation.question };
+            response = {
+              success: false,
+              requiresInput: true,
+              question: projectValidation.question,
+            };
+            break;
+          }
+
+          auditData.toolName = 'SubmitTimesheetTool';
+          const result = await this.submitTimesheet.execute(
+            userId,
+            projectValidation.data,
+          );
+          
+          auditData.toolResult = result;
+          await this.contextService.clearContext(userId);
+          response = result;
+          break;
         }
 
-        return this.submitTimesheet.execute(
-          userId,
-          projectValidation.data,
-        );
-      }
+        case IntentType.LEAVE_REQUEST: {
+          const extracted = await this.leaveExtractor.extract(message);
 
-      case IntentType.LEAVE_REQUEST: {
+          const dataToValidate = context && context.intent === IntentType.LEAVE_REQUEST
+            ? this.contextService.mergeData(context.extractedData, extracted)
+            : extracted;
 
-        const extracted =
-          await this.leaveExtractor.extract(
-            message,
-          );
+          auditData.extractedData = dataToValidate;
 
-        console.log(
-          'LEAVE EXTRACTED',
-          extracted,
-        );
+          const validation = await this.leaveValidator.validate(dataToValidate);
 
-        const validation =
-          await this.leaveValidator.validate(
-            extracted,
-          );
-
-        if (
-          validation.needsClarification
-        ) {
-          return {
-            success: false,
-
-            requiresInput: true,
-
-            question:
+          if (validation.needsClarification) {
+            await this.contextService.saveContext(
+              userId,
+              IntentType.LEAVE_REQUEST,
+              dataToValidate,
               validation.question,
-          };
+            );
+            auditData.validationData = { question: validation.question };
+            response = {
+              success: false,
+              requiresInput: true,
+              question: validation.question,
+            };
+            break;
+          }
+
+          auditData.toolName = 'CreateLeaveRequestTool';
+          const result = await this.createLeaveRequest.execute(
+            userId,
+            validation.data,
+          );
+
+          auditData.toolResult = result;
+          await this.contextService.clearContext(userId);
+          response = result;
+          break;
         }
 
-        return this.createLeaveRequest.execute(
-          userId,
-          validation.data,
-        );
+        default:
+          response = {
+            success: false,
+            intent: intentResult.intent,
+            confidence: intentResult.confidence,
+            message: 'Unsupported intent',
+          };
+          break;
       }
-
-      default:
-
-        return {
-          success: false,
-
-          intent:
-            intentResult.intent,
-
-          confidence:
-            intentResult.confidence,
-
-          message:
-            'Unsupported intent',
-        };
+      
+      auditData.success = response.success === true;
+      
+    } catch (error) {
+      this.logger.error(`Error in process: ${error.message}`, error.stack);
+      auditData.error = error.message;
+      auditData.success = false;
+      response = { success: false, error: 'Internal server error' };
+    } finally {
+      await this.auditService.logInteraction(auditData);
     }
+
+    return response;
   }
 }

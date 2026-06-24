@@ -61,7 +61,11 @@ IMPORTANT EXTRACTION RULES
 
 9. Never validate leave types.
 
-10. Extraction only.
+10. If a date contains a typo (e.g. 'nest thursday' instead of 'next thursday'), DO NOT guess what they meant. Return null.
+
+11. Do NOT auto-correct spelling mistakes. Treat typos as unclear information and return null.
+
+12. Extraction only.
 
 If information is missing, return null.
 
@@ -235,7 +239,7 @@ Validation happens elsewhere.
 
 Never reject.
 
-Never correct.
+Never correct typos or spelling mistakes. If there is a typo, return null.
 
 Never improve user input.
 

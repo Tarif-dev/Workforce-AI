@@ -135,7 +135,18 @@ Output:
 ]
 }
 
-MINUTES
+MINUTES AND FRACTIONS
+
+You MUST convert any mention of minutes or fractional hours into decimal hours. 
+For example: 
+- 30 minutes = 0.5 hours
+- 45 minutes = 0.75 hours
+- 90 minutes = 1.5 hours
+- "half an hour" = 0.5 hours
+- "quarter hour" = 0.25 hours
+- "35 mins" = 0.58 hours
+
+NEVER treat time expressions (like "35 mins", "half an hour") as project names.
 
 User:
 Worked 90 minutes on CRM
@@ -146,6 +157,32 @@ Output:
 {
 "project": "CRM",
 "hours": 1.5
+}
+]
+}
+
+User:
+35 mins
+
+Output:
+{
+"entries": [
+{
+"project": null,
+"hours": 0.58
+}
+]
+}
+
+User:
+half an hour on frontend
+
+Output:
+{
+"entries": [
+{
+"project": "frontend",
+"hours": 0.5
 }
 ]
 }

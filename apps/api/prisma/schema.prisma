@@ -66,6 +66,8 @@ model User {
 
   leaveRequests  LeaveRequest[]
 
+  conversationContext ConversationContext?
+
   @@unique([organizationId, email])
 }
 
@@ -173,6 +175,23 @@ enum OrganizationStatus {
   SUSPENDED
 }
 
+model ConversationContext {
+  id              String   @id @default(uuid())
+
+  userId          String   @unique
+
+  intent          String
+
+  extractedData   Json
+
+  pendingQuestion String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id])
+}
+
 enum RoleType {
   EMPLOYEE
   MANAGER
@@ -211,4 +230,33 @@ enum LeaveStatus {
   APPROVED
   REJECTED
   CANCELLED
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+
+  userId         String
+
+  message        String
+
+  intent         String?
+
+  contextUsed    Boolean  @default(false)
+
+  extractedData  Json?
+
+  validationData Json?
+
+  toolName       String?
+
+  toolResult     Json?
+
+  success        Boolean
+
+  error          String?
+
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
 }

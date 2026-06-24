@@ -15,10 +15,13 @@ import { ToolsModule } from 'src/tools/tools.module';
 import { LeaveValidatorService } from './validators/leave-validator.service';
 import { TimesheetValidatorService } from './validators/timesheet-validator.service';
 import { ProjectValidationService } from './validators/project-validation.service';
+import { ConversationContextService } from './context/conversation-context.service';
+import { AuditModule } from '../audit/audit.module';
 
 @Module({
   imports: [
     ToolsModule,
+    AuditModule,
   ],
 
   providers: [
@@ -31,6 +34,7 @@ import { ProjectValidationService } from './validators/project-validation.servic
     LeaveValidatorService,
     TimesheetValidatorService,
     ProjectValidationService,
+    ConversationContextService,
     // AiTesterService
   ],
 
