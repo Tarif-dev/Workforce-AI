@@ -1,0 +1,547 @@
+[
+  {
+    "category": "TIMESHEET",
+    "prompt": "Worked 4 hours on CRM and 2 hours on Support",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.98,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 4
+          },
+          {
+            "project": "Support",
+            "hours": 2
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Spent 8 hours on Project Alpha",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "Project Alpha",
+            "hours": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Worked 3 hours on development and 5 hours on testing",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.98,
+      "data": {
+        "entries": [
+          {
+            "project": "development",
+            "hours": 3
+          },
+          {
+            "project": "testing",
+            "hours": 5
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Logged 6.5 hours for API integration",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.97,
+      "data": {
+        "entries": [
+          {
+            "project": "API integration",
+            "hours": 6.5
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Today I worked 2 hours on meetings and 6 hours on coding",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "Meetings",
+            "hours": 2
+          },
+          {
+            "project": "Coding",
+            "hours": 6
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Worked 2 hours on CRM, 3 hours on Support, and 3 hours on Documentation",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 2
+          },
+          {
+            "project": "Support",
+            "hours": 3
+          },
+          {
+            "project": "Documentation",
+            "hours": 3
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "4h backend, 2h frontend, 2h QA",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.98,
+      "data": {
+        "entries": [
+          {
+            "project": "backend",
+            "hours": 4
+          },
+          {
+            "project": "frontend",
+            "hours": 2
+          },
+          {
+            "project": "QA",
+            "hours": 2
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "CRM 3 hours, ERP 4 hours, Internal Meeting 1 hour",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 3
+          },
+          {
+            "project": "ERP",
+            "hours": 4
+          },
+          {
+            "project": "Internal Meeting",
+            "hours": 1
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Worked 1.25 hours on CRM and 6.75 hours on Testing",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.98,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 1.25
+          },
+          {
+            "project": "Testing",
+            "hours": 6.75
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "TIMESHEET",
+    "prompt": "Worked 90 minutes on CRM and 2 hours on Support",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.85,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 1.5
+          },
+          {
+            "project": "Support",
+            "hours": 2
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "Apply sick leave tomorrow due to fever",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.95,
+      "data": {
+        "leaveType": "SICK",
+        "startDate": "2026-06-24",
+        "endDate": "2026-06-24",
+        "reason": "fever"
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "I need casual leave on Friday",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.95,
+      "data": {
+        "leaveType": "CASUAL",
+        "startDate": "2026-06-26",
+        "endDate": "2026-06-26"
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "Request annual leave from June 25 to June 27",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.98,
+      "data": {
+        "leaveType": "ANNUAL",
+        "startDate": "2026-06-25",
+        "endDate": "2026-06-27"
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "Taking a vacation next week",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.85,
+      "data": {
+        "leaveType": "VACATION",
+        "startDate": "",
+        "endDate": "",
+        "reason": ""
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "Need half day leave tomorrow",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.95,
+      "data": {
+        "leaveType": "HALF DAY",
+        "startDate": "2026-06-24"
+      }
+    }
+  },
+  {
+    "category": "LEAVE",
+    "prompt": "Taking earned leave from 24 June to 28 June for a family function",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.95,
+      "data": {
+        "leaveType": "EARNED",
+        "startDate": "2026-06-24",
+        "endDate": "2026-06-28",
+        "reason": "family function"
+      }
+    }
+  },
+  {
+    "category": "WFH",
+    "prompt": "I want to work from home tomorrow",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.75,
+      "data": {
+        "leaveType": "WORK_FROM_HOME",
+        "startDate": "2026-06-24",
+        "endDate": "2026-06-24"
+      }
+    }
+  },
+  {
+    "category": "WFH",
+    "prompt": "Request WFH on Friday",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.75,
+      "data": {
+        "leaveType": "WFH",
+        "startDate": "2026-06-26",
+        "endDate": "2026-06-26"
+      }
+    }
+  },
+  {
+    "category": "WFH",
+    "prompt": "Can I work remotely next Monday?",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.75,
+      "data": {
+        "leaveType": "REMOTE_WORK",
+        "startDate": "2026-06-30",
+        "endDate": "2026-06-30"
+      }
+    }
+  },
+  {
+    "category": "ATTENDANCE",
+    "prompt": "Please regularize my attendance for yesterday",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.85,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 5.25
+          },
+          {
+            "project": "Support",
+            "hours": 3.75
+          },
+          {
+            "project": "Documentation",
+            "hours": 2
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "ATTENDANCE",
+    "prompt": "Forgot to punch in today",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.85,
+      "data": {
+        "entries": []
+      }
+    }
+  },
+  {
+    "category": "ATTENDANCE",
+    "prompt": "Mark me present for June 20",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 7.5
+          },
+          {
+            "project": "Support",
+            "hours": 4.5
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "MIXED",
+    "prompt": "Worked 4 hours on CRM and taking half day leave",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "MIXED",
+    "prompt": "Logged 3 hours on support before leaving sick",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.95,
+      "data": {
+        "entries": [
+          {
+            "project": "Support",
+            "hours": 3
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "MIXED",
+    "prompt": "Worked 2 hours today and applying emergency leave for the rest of the day",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.85,
+      "data": {
+        "leaveType": "EMERGENCY",
+        "startDate": "2026-06-23",
+        "endDate": "2026-06-23"
+      }
+    }
+  },
+  {
+    "category": "AMBIGUOUS",
+    "prompt": "Worked on CRM",
+    "success": true,
+    "response": {
+      "intent": "TIMESHEET_ENTRY",
+      "confidence": 0.75,
+      "data": {
+        "entries": [
+          {
+            "project": "CRM",
+            "hours": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "category": "AMBIGUOUS",
+    "prompt": "Need leave",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.75,
+      "data": {
+        "leaveType": "UNSPECIFIED",
+        "startDate": "",
+        "endDate": "",
+        "reason": ""
+      }
+    }
+  },
+  {
+    "category": "AMBIGUOUS",
+    "prompt": "Support work today",
+    "success": true,
+    "response": {
+      "intent": "GENERAL_QUERY",
+      "confidence": 0.5,
+      "data": null
+    }
+  },
+  {
+    "category": "AMBIGUOUS",
+    "prompt": "Not feeling well",
+    "success": true,
+    "response": {
+      "intent": "LEAVE_REQUEST",
+      "confidence": 0.65,
+      "data": {
+        "leaveType": "SICK",
+        "startDate": "",
+        "endDate": "",
+        "reason": "feeling well"
+      }
+    }
+  },
+  {
+    "category": "GARBAGE",
+    "prompt": "",
+    "success": true,
+    "response": {
+      "intent": "UNKNOWN",
+      "confidence": 0.5,
+      "data": null
+    }
+  },
+  {
+    "category": "GARBAGE",
+    "prompt": "asdfghjkl",
+    "success": true,
+    "response": {
+      "intent": "UNKNOWN",
+      "confidence": 1,
+      "data": null
+    }
+  },
+  {
+    "category": "GARBAGE",
+    "prompt": "123456",
+    "success": true,
+    "response": {
+      "intent": "UNKNOWN",
+      "confidence": 0.99,
+      "data": null
+    }
+  },
+  {
+    "category": "GARBAGE",
+    "prompt": "!@#$%^&*",
+    "success": true,
+    "response": {
+      "intent": "UNKNOWN",
+      "confidence": 0.75,
+      "data": null
+    }
+  }
+]

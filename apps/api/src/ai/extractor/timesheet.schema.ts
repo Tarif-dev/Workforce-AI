@@ -1,10 +1,15 @@
 import { z } from 'zod';
 
-export const TimesheetEntrySchema = z.object({
-  project: z.string(),
+export const TimesheetEntrySchema =
+  z.object({
+    project: z.string()
+      .nullable()
+      .optional(),
 
-  hours: z.number(),
-});
+    hours: z.number()
+      .nullable()
+      .optional(),
+  });
 
 export const TimesheetExtractionSchema =
   z.object({
@@ -16,4 +21,4 @@ export const TimesheetExtractionSchema =
 export type TimesheetExtraction =
   z.infer<
     typeof TimesheetExtractionSchema
-  >;
+  >;

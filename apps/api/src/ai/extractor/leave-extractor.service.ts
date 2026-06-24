@@ -9,7 +9,7 @@ export class LeaveExtractorService {
   constructor(
     private readonly ollama:
       OllamaProvider,
-  ) {}
+  ) { }
 
   async extract(
     message: string,
@@ -20,6 +20,11 @@ export class LeaveExtractorService {
         message,
         LEAVE_EXTRACTION_PROMPT,
       );
+
+    console.log(
+      'RAW LEAVE EXTRACTION',
+      result,
+    );
 
     return LeaveExtractionSchema.parse(
       result,

@@ -9,15 +9,29 @@ import { ExtractorsController } from './extractor/extractors.controller';
 import { LeaveExtractorService } from './extractor/leave-extractor.service';
 import { IntentRouterService } from './router/intent-router.service';
 import { RouterController } from './router/router.controller';
+// import { AiTesterService } from './testing/ai-tester.service';
+// import { AiTestingController } from './testing/ai-testing.controller';
+import { ToolsModule } from 'src/tools/tools.module';
+import { LeaveValidatorService } from './validators/leave-validator.service';
+import { TimesheetValidatorService } from './validators/timesheet-validator.service';
+import { ProjectValidationService } from './validators/project-validation.service';
 
 @Module({
+  imports: [
+    ToolsModule,
+  ],
+
   providers: [
     AiService,
     OllamaProvider,
     IntentService,
     TimesheetExtractorService,
     LeaveExtractorService,
-    IntentRouterService
+    IntentRouterService,
+    LeaveValidatorService,
+    TimesheetValidatorService,
+    ProjectValidationService,
+    // AiTesterService
   ],
 
   exports: [
@@ -25,6 +39,7 @@ import { RouterController } from './router/router.controller';
     OllamaProvider,
   ],
 
-  controllers: [AiController,IntentController,ExtractorsController,RouterController],
+  controllers: [AiController,IntentController,ExtractorsController,RouterController,
+    ],
 })
 export class AiModule {}
